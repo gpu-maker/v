@@ -1,68 +1,71 @@
-const canvas = document.getElementById("game");
-const ctx = canvas.getContext("2d");
+let stability = 100;
+let log = [];
 
-canvas.width = 600;
-canvas.height = 400;
+const messages = [
+  "Shadow detected behind user.",
+  "Audio anomaly: whispering.",
+  "Time desync: 0.4 seconds.",
+  "Unregistered entity detected.",
+  "Memory leak in reality.",
+  "Door appeared where none existed.",
+  "Unknown signal received.",
+  "Observer effect triggered.",
+  "Object duplication event.",
+  "Reality tearing..."
+];
 
-let score = 0;
-const scoreUI = document.getElementById("score");
+function triggerGlitch() {
+  const msg = random(messages);
 
-const player = {
-  x: 50,
-  y: 50,
-  size: 25,
-  speed: 4
-};
+  stability -= randomNumber(5, 20);
+  if (stability < 0) stability = 0;
 
-const coin = {
-  x: Math.random() * 550,
-  y: Math.random() * 350,
-  size: 15
-};
+  updateMeter();
 
-const keys = {};
+  document.getElementById("status").textContent = msg;
+  document.body.classList.add("glitch");
 
-document.addEventListener("keydown", e => keys[e.key] = true);
-document.addEventListener("keyup", e => keys[e.key] = false);
+  setTimeout(() => {
+    document.body.classList.remove("glitch");
+  }, 300);
 
-function update() {
-  if (keys["ArrowUp"] || keys["w"]) player.y -= player.speed;
-  if (keys["ArrowDown"] || keys["s"]) player.y += player.speed;
-  if (keys["ArrowLeft"] || keys["a"]) player.x -= player.speed;
-  if (keys["ArrowRight"] || keys["d"]) player.x += player.speed;
+  addLog(msg);
 
-  // collision
-  if (
-    player.x < coin.x + coin.size &&
-    player.x + player.size > coin.x &&
-    player.y < coin.y + coin.size &&
-    player.y + player.size > coin.y
-  ) {
-    score++;
-    scoreUI.textContent = score;
-    coin.x = Math.random() * 550;
-    coin.y = Math.random() * 350;
-  }
+  if (stability === 0) collapseReality();
 }
 
-function draw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  // player
-  ctx.fillStyle = "lime";
-  ctx.fillRect(player.x, player.y, player.size, player.size);
-
-  // coin
-  ctx.fillStyle = "gold";
-  ctx.beginPath();
-  ctx.arc(coin.x, coin.y, coin.size, 0, Math.PI * 2);
-  ctx.fill();
+function collapseReality() {
+  document.getElementById("status").textContent =
+    "REALITY COLLAPSE IMMINENT";
 }
 
-function gameLoop() {
-  update();
-  draw();
-  requestAnimationFrame(gameLoop);
+function updateMeter() {
+  document.getElementById("meter").style.width = stability + "%";
 }
 
-gameLoop();
+function addLog(message) {
+  const entry =
+    new Date().toLocaleTimeString() + " — " + message;
+
+  log.push(entry);
+
+  const div = document.createElement("div");
+  div.textContent = entry;
+  document.getElementById("log").prepend(div);
+}
+
+function downloadLog() {
+  const blob = new Blob([log.join("\n")], { type: "text/plain" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "reality_incident_log.txt";
+  a.click();
+}
+
+function random(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function randomNumber(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
