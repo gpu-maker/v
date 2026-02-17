@@ -1,11 +1,60 @@
 body {
   background: black;
-  color: white;
+  color: #00ff9f;
+  font-family: monospace;
   text-align: center;
-  font-family: Arial;
+  margin-top: 80px;
 }
 
-canvas {
-  background: #111;
-  border: 3px solid white;
+h1 {
+  letter-spacing: 4px;
+}
+
+#meterContainer {
+  width: 400px;
+  height: 30px;
+  border: 2px solid #00ff9f;
+  margin: 20px auto;
+}
+
+#meter {
+  height: 100%;
+  width: 100%;
+  background: #00ff9f;
+  transition: width 0.4s;
+}
+
+button {
+  margin: 10px;
+  padding: 12px 20px;
+  background: black;
+  border: 1px solid #00ff9f;
+  color: #00ff9f;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #003322;
+}
+
+#log {
+  margin-top: 30px;
+  max-height: 200px;
+  overflow: auto;
+  width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+}
+
+.glitch {
+  animation: glitch 0.15s infinite;
+}
+
+@keyframes glitch {
+  0% { transform: translate(3px, -3px); }
+  25% { transform: translate(-3px, 2px); }
+  50% { transform: translate(2px, 3px); }
+  75% { transform: translate(-2px, -2px); }
+  100% { transform: translate(0); }
 }
